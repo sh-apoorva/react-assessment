@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import {DataList} from './components/data-list/data-list.component';
+import {Modal} from "./components/modal/modal.component";
+import PropTypes from "prop-types";
 import './App.css';
 
 class App extends Component {
@@ -9,9 +11,20 @@ class App extends Component {
     this.state = {
       datalist: [],
       header: [{ title: 'Header', url: '', author: 'Apoorva', created_at: 'YYYY-MM-DD 00:00:00' }],
-      searchField: ''
+      searchField: '',
+      show: false
     }    
   }
+
+  showModal = e => {
+    this.setState({
+      show: !this.state.show
+    });
+  };
+
+  onClose = e => {
+    this.props.onClose && this.props.onClose(e);
+  };
 
   componentDidMount(){
     this.getData();
@@ -40,7 +53,6 @@ class App extends Component {
 
     return (
       <div className="App">
-        <h1 id='title'>Assignment for React JS</h1>
         <input type="search" placeholder="Search" onClick={e => this.setState({ searchField: e.target.value })} />
         <hr/>
         <table id='students'>
@@ -49,9 +61,17 @@ class App extends Component {
             <DataList datalist={filteredList} />
           </tbody>
         </table>
+        <Modal onClose={this.showModal} show={this.state.show}>Message in Modal</Modal>
+        <button onClick={e => {this.showModal();}}> Show Modal </button>
+        <br/><br/><br/><br/><br/>
       </div>
     );
   }
 }
+
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired
+};
 
 export default App;
